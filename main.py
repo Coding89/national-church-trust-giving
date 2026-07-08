@@ -103,7 +103,7 @@ def parse_file(file_path):
         return None
     
 if __name__ == "__main__":
-        data_dir = Path("../datasets")
+        data_dir = Path("datasets")
         
         if not data_dir.exists():
             print(f"ERROR: Directory '{data_dir} does not exist.")
