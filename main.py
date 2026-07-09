@@ -4,22 +4,13 @@ Title: National Churches Trust (NCT) 360Giving Data Integration Pipeline
 This script consolidates historical NCT grant spreadsheets (from 2016 to 2024) into a unified, schema
 Parquet dataset for analysis.
 
-This pipeline acts as a resilience layer to map, clean and merge those files without losing historical fields
-and consolidates the data.
-
 """
 import datetime
-import glob
-import os
 import sys
 from pathlib import Path
 import pandas as pd
 
-#===================================================
-#National Churches Trust 360Giving Data Consolidator
-#===================================================
-
-#Mapping to handle any 360Giving messy data and aligns the column names
+# Column mapping to handle 360Giving's inconsistent naming conventions
 COLUMN_MAP = {
     "Identifier":"Identifier",
     "Title": "Title",
@@ -40,16 +31,17 @@ COLUMN_MAP = {
     "Funding Org:Name": "Funding Org:Name",
     "Data Source": "Data Source",
     "Last Modified":"Last Modified",
+# Add more if new columns are introduced
 }
 
-#Makes the column names sane by collapsing spaces and strippping out hidden layout issues.
+# Clean up column names
 def clean_col_name(col):
     if not isinstance(col, str):
         col = str(col)
     col = col.strip()
     return " ".join(col.split()).replace("\n", " ").replace("\r", "")
 
-#Opens and organises one National Churches Trust grant file using a standard layout
+# Reads a single grant spreadsheet
 def parse_file(file_path):
     path = Path(file_path)
     
@@ -75,11 +67,11 @@ def parse_file(file_path):
             xl, sheet_name=sheet_name, engine="openpyxl", dtype=str
         )
         
-        if df.empty or len(df) <2:
+        if df.empty or len(df) < 2:
             print(f"Caution! No data in sheet for {path.name}")
             return None
         
-        # Cleans the column spaces so that the map matches beautifully
+        # Normalise column names
         df.columns = [clean_col_name(c) for c in df.columns]
         
         # Verify that we actually have the expected columns
@@ -90,7 +82,7 @@ def parse_file(file_path):
             )
             return None
         
-        #Added required filtering and return statements
+        # Keeps only the columns that are recognised
         existing_cols = [c for c in COLUMN_MAP.keys() if c in df.columns]
         df = df[existing_cols].copy()
         df.rename(columns=COLUMN_MAP, inplace=True)
@@ -103,30 +95,30 @@ def parse_file(file_path):
         return None
     
 if __name__ == "__main__":
-        data_dir = Path("datasets")
+    data_dir = Path("datasets") # changed from ../datasets
         
-        if not data_dir.exists():
+    if not data_dir.exists():
             print(f"ERROR: Directory '{data_dir} does not exist.")
             sys.exit(1)
      # Takes into account all file years       
-        files = sorted(
+    files = sorted(
             data_dir.glob("*_national_churches_trust_360_giving_data.xlsx")
         )
         
-        if not files:
-            print("No matching Excel files found.")
+    if not files:
+            print("Nothing worked. Check the Excel files.")
             sys.exit(1)
         
-        print(f"Found {len(files)} files with a matching schema. Merging...\n")
+    print(f"Found {len(files)} files with a matching schema. Merging...\n")
         
-        all_data = []
+    all_data = []
         
-        for f in files:
+    for f in files:
             year = datetime.datetime.now().year
             try:
-                year = int(f.name.split ("_")[0])
-            except:
-                pass # A fallback if the filename gets modified.
+                year = int(f.stem[:4])
+            except ValueError:
+                year = datetime.datetime.now().year
             
             print(f"Processing {year} data...")
             result = parse_file(f)
@@ -135,35 +127,35 @@ if __name__ == "__main__":
                 result["grant_calendar_year"] = year
                 all_data.append(result)
             
-        if not all_data:
+    if not all_data:
             print("No data extracted. Check the files.")
             sys.exit(1)
             
-        print("\nMerging everything in a single Master set...")
-        final = pd.concat(all_data, ignore_index=True)
+    print("\nMerging everything in a single Master set...")
+    final = pd.concat(all_data, ignore_index=True)
         
-        # Casting data types cleanly
-        if"Award Date" in final.columns:
+    if "Award Date" in final.columns:
             final["Award Date"] = pd.to_datetime(
                 final["Award Date"], errors="coerce"
             )
         
-        if "Amount Awarded" in final.columns:
+    if "Amount Awarded" in final.columns:
             final["Amount Awarded"] = pd.to_numeric(
                 final["Amount Awarded"], errors="coerce"
             )
-        final.drop_duplicates(inplace=True)
-        final = final.loc[:, ~final.columns.duplicated()].copy()
+        # Final cleaning of data
+    final.drop_duplicates(inplace=True)
+    final = final.loc[:, ~final.columns.duplicated()].copy()
         
-        #Save to file and provides a parquet file
-        out_parquet = "national_church_grants_2016_2024.parquet"
-        try:
+        # Save to file and provides a parquet file
+    out_parquet = "national_church_grants_2016_2024.parquet"
+    try:
             final.to_parquet(
                 out_parquet, index=False, engine="pyarrow", compression="snappy"
             )
             print(f"\n Success! {len(final):,} grants saved to {out_parquet}")
-        except Exception as e:
+    except Exception as e:
             print(f"Parquet compression engine failed ({e}), saving to CSV...")
             final.to_csv("national_churches_grants_fallback.csv", index=False)
         
-        print("Pipeline execution complete")
+    print("Pipeline execution complete")
