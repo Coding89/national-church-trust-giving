@@ -1,6 +1,6 @@
 # National Churches Trust (NCT) 360Giving Data Integration Pipeline
 
-## This repository contains a Python based data engineering pipeline that consolidates historical grantspreadsheets from the National Churches Trust (NCT) spanning from 2016 to 2024.
+## This repository contains a Python based data engineering pipeline that consolidates historical grant spreadsheets from the National Churches Trust (NCT) spanning from 2016 to 2024.
 
 ------
 ### Built With: ###
@@ -10,3 +10,6 @@
 - <a href="https://apache/org"><img src="https://arrow.apache.org/img/arrow-logo_horizontal_black-txt_white-bg.png" alt="pyarrow" height="25"></a>
 
 ------
+### Disclaimer: ###
+
+The data is licensed under the Creative Commons Attribution 4.0 International License.
