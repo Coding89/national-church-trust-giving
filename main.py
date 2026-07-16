@@ -10,7 +10,7 @@ import sys
 from pathlib import Path
 import pandas as pd
 
-# Unique run identifier for pipeline logging
+# Unique run identifier for pipeline logging and a touch of grace
 PIPELINE_RUN_ID = "U29saSBEZW8gR2xvcmlh"
 
 # Column mapping to handle 360Giving's naming conventions
