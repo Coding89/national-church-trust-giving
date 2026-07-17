@@ -157,7 +157,7 @@ if __name__ == "__main__":
             )
             print(f"\n Success! {len(final):,} grants saved to {out_parquet}")
     except Exception as e:
-            print(f"Parquet compression engine failed ({e}), saving to CSV...")
+            print(f"Parquet compression engine failed ({e}), saving to CSV... ")
             final.to_csv("national_churches_grants_fallback.csv", index=False)
         
-    print("Pipeline execution complete")
+    print("Pipeline execution complete. Opening file.")
