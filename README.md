@@ -53,6 +53,13 @@ Run the script directly via your terminal:
 ```
 python main.py
 ```
+
+### Outputs ###
+Upon a successful execution the pipeline creates:
+
+- national_church_grants_2016_2024.parquet: The primary compressed, column based analytical datasets.
+- national_churches_grants_fallback.csv : This is generated only if your local environment lacks the required C-extensions for Apache Arrow data serialisation.
+
 ------
 ### Disclaimer: ###
 
