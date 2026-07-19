@@ -63,4 +63,8 @@ Upon a successful execution the pipeline creates:
 ------
 ### Disclaimer: ###
 
-The data is licensed under the Creative Commons Attribution 4.0 International License.
+```
+License
+This project integrates data licensed under the Creative Commons Attribution 4.0 International License.
+```
+
