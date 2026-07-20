@@ -7,7 +7,7 @@
 
 This data engineering pipeline automates the consolidation, normalisation and formatting of historical National Churches Trust (NCT) grant datasets spanning from 2016 to 2024.
 
-The source data is orginally published in an Excel format complaint with 360Giving open data standard. This pipeline acts as an ingestion layer by cleaning text anomalies, resolving layout variations and unifying types into a high performance Apache Parquet datast optimised for analytics and BI tools.
+The source data is originally published in an Excel format compliant with 360Giving open data standard. This pipeline acts as an ingestion layer by cleaning text anomalies, resolving layout variations and unifying types into a high performance Apache Parquet datast optimised for analytics and BI tools.
 
 ------
 ### Built With: ###
@@ -24,7 +24,7 @@ The source data is orginally published in an Excel format complaint with 360Givi
 Please ensure that your local environment has the required data processing dependencies installed:
 
 ```
-pip install pandas openpyxl pyrarrow
+pip install pandas openpyxl pyarrow
 ```
 
 ### Directory Structure ###
