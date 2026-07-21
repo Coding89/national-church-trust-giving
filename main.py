@@ -61,17 +61,16 @@ def parse_file(file_path):
         df.columns = [clean_col_name(c) for c in df.columns]
         
         # Verify that we actually have the expected columns
-        missing_cols = [c for c in COLUMN_MAP.keys() if c not in df.columns]
-        if len(missing_cols) == len(COLUMN_MAP):
+        missing_cols = EXPECTED_COLUMNS - set(df.columns)
+        if missing_cols == EXPECTED_COLUMNS:
             print(
                 f"Caution! Critical layout shift: Found none of the expected headers in {path.name}"
             )
             return None
         
         # Keeps only the columns that are recognised
-        existing_cols = [c for c in COLUMN_MAP.keys() if c in df.columns]
+        existing_cols = [c for c in EXPECTED_COLUMNS if c in df.columns]
         df = df[existing_cols].copy()
-        df.rename(columns=COLUMN_MAP, inplace=True)
         
         df["source_file"] = path.name
         return df
