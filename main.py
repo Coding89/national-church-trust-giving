@@ -1,36 +1,22 @@
 """
-Title: National Churches Trust (NCT) 360Giving Data Integration Pipeline
+National Churches Trust (NCT) 360Giving Data Integration Pipeline
 
-This script consolidates historical NCT grant spreadsheets (from 2016 to 2024) into a unified, schema
-Parquet dataset for analysis.
-
+I wrote this script to merge all the NCT grant spreadsheets (from 2016 - 2024) into one clean Parquet file. 
+This allows a user to analyse the data for informative and visual analysis.
 """
 import datetime
 import sys
 from pathlib import Path
 import pandas as pd
 
-# Column mapping to handle 360Giving's inconsistent naming conventions
-COLUMN_MAP = {
-    "Identifier":"Identifier",
-    "Title": "Title",
-    "Description": "Description",
-    "Amount Awarded": "Amount Awarded",
-    "Currency": "Currency",
-    "Award Date": "Award Date",
-    "Recipient Org:Name": "Recipient Org:Name",
-    "Recipient Org:Identifier": "Recipient Org:Identifier",
-    "Recipient Org:Charity Number": "Recipient Org:Charity Number",
-    "Recipient Org:County": "Recipient Org:County",
-    "Recipient Org:Postal Code": "Recipient Org:Postal Code",
-    "Recipient Org:Description": "Recipient Org:Description",
-    "Listed Status": "Listed Status",
-    "Beneficiary Location:Description": "Beneficiary Location:Description",
-    "Beneficiary Location:Name": "Beneficiary Location:Name",
-    "Grant Programme:Title": "Grant Programme:Title",
-    "Funding Org:Name": "Funding Org:Name",
-    "Data Source": "Data Source",
-    "Last Modified":"Last Modified",
+# If the column format titles are changed 
+EXPECTED_COLUMNS = {
+    "Identifier","Title", "Description", "Amount Awarded", "Currency",
+    "Award Date", "Recipient Org:Name", "Recipient Org:Identifier",
+    "Recipient Org:Charity Number","Recipient Org:County",
+    "Recipient Org:Postal Code", "Recipient Org:Description", "Listed Status",
+    "Beneficiary Location:Description", "Beneficiary Location:Name",
+    "Grant Programme:Title", "Funding Org:Name", "Data Source","Last Modified",
 # Add more if new columns are introduced
 }
 
