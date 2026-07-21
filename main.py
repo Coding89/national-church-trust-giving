@@ -38,7 +38,7 @@ def parse_file(file_path):
         
         xl = pd.ExcelFile(path, engine="openpyxl")
         
-        #Finds the right data tab
+        # Finds the right data tab
         sheet_name = None
         for s in xl.sheet_names:
             if any(x in s.lower() for x in ["trust", "grant", "data"]):
@@ -57,7 +57,7 @@ def parse_file(file_path):
             print(f"Caution! No data in sheet for {path.name}")
             return None
         
-        # Normalise column names
+        # Normalises column names
         df.columns = [clean_col_name(c) for c in df.columns]
         
         # Verify that we actually have the expected columns
@@ -141,7 +141,7 @@ if __name__ == "__main__":
             )
             print(f"\n Success! {len(final):,} grants saved to {out_parquet}")
     except Exception as e:
-            print(f"Parquet compression engine failed ({e}), saving to CSV...")
+            print(f"Parquet compression engine failed ({e}), saving to CSV... ")
             final.to_csv("national_churches_grants_fallback.csv", index=False)
         
-    print("Pipeline execution complete")
+    print("Pipeline execution complete. Opening file.")
